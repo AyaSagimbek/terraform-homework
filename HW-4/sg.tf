@@ -4,8 +4,8 @@ resource "aws_security_group" "allow_tls" {
 
   ingress {
     description = "TLS from VPC"
-    from_port   = var.port[0] # port = [22, 80]
-    to_port     = var.port[0] # 22 has index 0, 80 has index 1
+    from_port   = var.port[0] 
+    to_port     = var.port[0] 
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
