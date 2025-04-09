@@ -1,54 +1,53 @@
 resource "aws_vpc" "main" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
-  enable_dns_hostnames = true
+  cidr_block = var.vpc.cidr_block
+  enable_dns_support = var.vpc.dns_support
+  enable_dns_hostnames = var.vpc.dns_hostnames
 
-  tags = {
-    Name = "kaizen"
-  }
+   tags = local.common_tags
 }
+
 
 resource "aws_subnet" "sn1" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.0.0/24"
-  availability_zone = "us-west-2a"
-  map_public_ip_on_launch = true 
+  cidr_block = var.subnet[0].cidr_block
+  availability_zone = var.subnet[0].az
+  map_public_ip_on_launch = var.subnet[0].public_ip
 
   tags = {
-    Name = "public1"
+    Name = var.subnet[0].name
   }
 }
 
 resource "aws_subnet" "sn2" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = "us-west-2b"
-  map_public_ip_on_launch = true 
+  cidr_block = var.subnet[1].cidr_block
+  availability_zone = var.subnet[1].az
+  map_public_ip_on_launch = var.subnet[1].public_ip
 
   tags = {
-    Name = "public2"
+    Name = var.subnet[1].name
   }
 }
 
 resource "aws_subnet" "sn3" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.3.0/24"
-  availability_zone = "us-west-2c"
-  map_public_ip_on_launch = false 
+  cidr_block = var.subnet[2].cidr_block
+  availability_zone = var.subnet[2].az
+  map_public_ip_on_launch = var.subnet[2].public_ip
 
   tags = {
-    Name = "private1"
+    Name = var.subnet[2].name
   }
 }
 
 resource "aws_subnet" "sn4" {
   vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.4.0/24"
-  availability_zone = "us-west-2d"
-  map_public_ip_on_launch = false 
+  cidr_block = var.subnet[3].cidr_block
+  availability_zone = var.subnet[3].az
+  map_public_ip_on_launch = var.subnet[3].public_ip
 
   tags = {
-    Name = "private2"
+    Name = var.subnet[3].name
   }
 }
 
@@ -56,7 +55,7 @@ resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "homework3"
+    Name = var.igw
   }
 }
 
@@ -69,7 +68,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "public"
+    Name = var.rt[0]
   }
 }
 
@@ -78,7 +77,7 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "private"
+    Name = var.rt[1]
   }
 }
 

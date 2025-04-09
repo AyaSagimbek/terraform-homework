@@ -1,5 +1,23 @@
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
+}
+
+
+
 resource "aws_instance" "ubuntu" {
-  ami           = "ami-075686beab831bb7f"
+  ami           = data.aws_ami.ubuntu.id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.sn1.id
   key_name = aws_key_pair.deployer.key_name
@@ -12,9 +30,26 @@ resource "aws_instance" "ubuntu" {
   }
 }
 
+data "aws_ami" "linux" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["137112412989"]
+}
+
+
 
 resource "aws_instance" "amazon" {
-  ami           = "ami-087f352c165340ea1"
+  ami           = data.aws_ami.linux.id
   instance_type = "t2.micro"
   subnet_id = aws_subnet.sn2.id
   key_name = aws_key_pair.deployer.key_name
